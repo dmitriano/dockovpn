@@ -57,6 +57,8 @@ sed -i 's/%HOST_TUN_PROTOCOL%/'"$HOST_TUN_PROTOCOL"'/g' /etc/openvpn/server.conf
 iptables -A INPUT -i $ADAPTER -p ${HOST_TUN_PROTOCOL} -m state --state NEW,ESTABLISHED --dport 1194 -j ACCEPT
 iptables -A OUTPUT -o $ADAPTER -p ${HOST_TUN_PROTOCOL} -m state --state ESTABLISHED --sport 1194 -j ACCEPT
 
+# Preventing clients from seeing each other
+iptables -A FORWARD -i tun0 -o tun0 -j REJECT
 # Allow traffic on the TUN interface.
 iptables -A INPUT -i tun0 -j ACCEPT
 iptables -A FORWARD -i tun0 -j ACCEPT
